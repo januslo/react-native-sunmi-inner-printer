@@ -15,3 +15,7 @@ project(':react-native-sunmi-inner-printer').projectDir = new File(rootProject.p
 3.修改app/build.gradle,在dependenceie里面加入：
 
 compile project(':react-native-sunmi-inner-printer')
+
+4.MainPackage.java 中加入package的引用
+5.Js中import
+
