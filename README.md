@@ -5,7 +5,7 @@ http://docs.sunmi.com/htmls/index.html?lang=zh##V1文档资源  根据商米V1�
 
 1. 下载package到项目
 
-npm install janus/react-natvie-sunmi-inner-printer --save
+npm install januslo/react-natvie-sunmi-inner-printer --save
 
 2. 修改settings.gradle
 
