@@ -23,6 +23,6 @@
   "license": "",
   "private": false,
   "peerDependencies": {
-    "react-native": "^0.42.0"
+    "react-native": "^0.42.3"
   }
 }
