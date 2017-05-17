@@ -1,6 +1,8 @@
 # react-native-sunmi-inner-printer
 http://docs.sunmi.com/htmls/index.html?lang=zh##V1文档资源  根据商米V1文档开发打印接口
 
+for scanner, refer this: https://github.com/januslo/react-native-sunmi-inner-scanner
+
 安装：
 
 1. 下载package到项目
