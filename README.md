@@ -2,7 +2,6 @@
 http://docs.sunmi.com/htmls/index.html?lang=zh##V1文档资源  根据商米V1文档开发打印接口
 (React native plugin Referring the sunmi V1 printer document and demos)
 
-
 _ **Caution: this is not the official project. I share it because I am working on this device but no any official support in react-native It's welcome to ask any question about the usage,problems or feature required, I will support ASAP.**_
 
 for scanner, refer this: https://github.com/januslo/react-native-sunmi-inner-scanner
