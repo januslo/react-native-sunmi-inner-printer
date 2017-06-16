@@ -7,3 +7,7 @@
 *.iml
 out
 gen
+examples/node_modules
+examples/android/build
+examples/android/app/build
+examples/android/.gradle
