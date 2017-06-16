@@ -68,4 +68,5 @@ import SunmiInnerPrinter from 'react-native-sunmi-inner-printer';
 ```
 
 **Usage & Demo:**
+See examples folder of the source code that you can find a simple example of printing receipt.
 // TODO
