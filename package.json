@@ -18,8 +18,10 @@
   "keywords": [
     "react-native",
     "sunmi",
-    "printer"
+    "printer",
+    "商米",
+    "打印"
   ],
-  "license": "",
+  "license": "MIT",
   "private": false
 }

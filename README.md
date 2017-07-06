@@ -10,10 +10,10 @@ for scanner, refer this: https://github.com/januslo/react-native-sunmi-inner-sca
 ======================================================================================
 **Installation:**
 
-Step 1. install with npm:
+Step 1. install with npm: [Check in NPM](https://www.npmjs.com/package/react-native-sunmi-inner-scanner)
 
 ```bash
-npm install januslo/react-natvie-sunmi-inner-printer --save
+npm install react-natvie-sunmi-inner-printer --save
 ```
 
 or you may need to install via the clone address directly:
