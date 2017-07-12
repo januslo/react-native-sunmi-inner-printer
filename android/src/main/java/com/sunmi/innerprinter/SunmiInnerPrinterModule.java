@@ -33,11 +33,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	private IWoyouService woyouService;
 	private BitmapUtils bitMapUtils;
 
-private ServiceConnection connService =  new ServiceConnection() {
-
+	private ServiceConnection connService =  new ServiceConnection() {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-Log.i(TAG,"Service disconnected: " +name);
+			Log.i(TAG,"Service disconnected: " + name);
 			woyouService = null;
 		}
 
@@ -48,11 +47,11 @@ Log.i(TAG,"Service disconnected: " +name);
 		}
 	};
 
-private static final String TAG = "SunmiInnerPrinterModule";
+	private static final String TAG = "SunmiInnerPrinterModule";
   public SunmiInnerPrinterModule(ReactApplicationContext reactContext) {
-    super(reactContext);
+		super(reactContext);
 
-		Intent intent=new Intent();
+		Intent intent = new Intent();
 		intent.setPackage("woyou.aidlservice.jiuiv5");
 		intent.setAction("woyou.aidlservice.jiuiv5.IWoyouService");
 		reactContext.startService(intent);
@@ -60,46 +59,177 @@ private static final String TAG = "SunmiInnerPrinterModule";
 		bitMapUtils = new BitmapUtils(reactContext);
   }
 
-   @Override
+  @Override
   public String getName() {
-    return "SunmiInnerPrinter";
+		return "SunmiInnerPrinter";
   }
 
-
-
-/**
+	/**
 	 * 初始化打印机，重置打印机的逻辑程序，但不清空缓存区数据，因此
 	 * 未完成的打印作业将在重置后继续
-	 * @param callback 回调
 	 * @return
 	 */
-//	void printerInit(in ICallback callback);
+	@ReactMethod
+	public void printerInit(final Promise p) {
+		final IWoyouService printerService = woyouService;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					printerService.printerInit(new ICallback.Stub(){
+						@Override
+						public void onRunResult(boolean isSuccess){
+							if(isSuccess){
+								 p.resolve(null);
+							}else{
+								p.reject("0", isSuccess + "");
+							}
+						}
+						@Override
+						public void onReturnString(String result){
+							p.resolve(result);
+						}
+						@Override
+						public void  onRaiseException(int code, String msg){
+							p.reject("" + code, msg);
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+						Log.i(TAG, "ERROR: " + e.getMessage());
+						p.reject("" + 0, e.getMessage());
+				}
+			}
+		});
+	}
 
 	/**
 	* 打印机自检，打印机会打印自检页
 	* @param callback 回调
 	*/
-//	void printerSelfChecking(in ICallback callback);
+	@ReactMethod
+	public void printerSelfChecking(final Promise p) {
+		final IWoyouService printerService = woyouService;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					printerService.printerSelfChecking(new ICallback.Stub(){
+						@Override
+						public void onRunResult(boolean isSuccess){
+							if(isSuccess){
+								 p.resolve(null);
+							}else{
+								p.reject("0",isSuccess+"");
+							}
+						}
+						@Override
+						public void onReturnString(String result){
+							p.resolve(result);
+						}
+						@Override
+						public void  onRaiseException(int code, String msg){
+							p.reject(""+code, msg);
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+						Log.i(TAG,"ERROR: " + e.getMessage());
+						p.reject(""+0,e.getMessage());
+				}
+			}
+		});
+	}
 
 	/**
 	* 获取打印机板序列号
 	*/
-	//String getPrinterSerialNo();
+	@ReactMethod
+	public void getPrinterSerialNo(final Promise p) {
+		try {
+			final IWoyouService printerService = woyouService;
+			String sn = printerService.getPrinterSerialNo();
+			p.resolve(sn);
+		}
+		catch (Exception e) {
+			Log.i(TAG, "ERROR: " + e.getMessage());
+			p.reject("" + 0, e.getMessage());
+		}
+	}
 
 	/**
 	* 获取打印机固件版本号
 	*/
-	//String getPrinterVersion();
+	@ReactMethod
+	public void getPrinterVersion(final Promise p) {
+		try {
+			final IWoyouService printerService = woyouService;
+			String version = printerService.getPrinterVersion();
+			p.resolve(version);
+		}
+		catch (Exception e) {
+			Log.i(TAG, "ERROR: " + e.getMessage());
+			p.reject("" + 0, e.getMessage());
+		}
+	}
 
 	/**
 	* 获取打印机型号
 	*/
-	//String getPrinterModal();
+	// @ReactMethod
+	// public void getPrinterModal(Promise p){
+	// }
+
+	/**
+	 * 是否存在打印机服务
+	 */
+	@ReactMethod
+	public void hasPrinter(final Promise p) {
+		try {
+			final IWoyouService printerService = woyouService;
+			final boolean hasPrinterService = printerService != null;
+			p.resolve(hasPrinterService);
+		} catch (Exception e) {
+			p.reject("" + 0, e.getMessage());
+		}
+	}
 
 	/**
 	* 获取打印头打印长度
 	*/
-	//void getPrintedLength(in ICallback callback);
+	@ReactMethod
+	public void getPrintedLength(final Promise p) {
+		final IWoyouService printerService = woyouService;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					printerService.getPrintedLength(new ICallback.Stub(){
+						@Override
+						public void onRunResult(boolean isSuccess){
+							if(isSuccess){
+								 p.resolve(null);
+							}else{
+								p.reject("0", isSuccess + "");
+							}
+						}
+						@Override
+						public void onReturnString(String result){
+							p.resolve(result);
+						}
+						@Override
+						public void  onRaiseException(int code, String msg){
+							p.reject("" + code, msg);
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+					Log.i(TAG,"ERROR: " + e.getMessage());
+					p.reject("" + 0, e.getMessage());
+				}
+			}
+		});
+	}
 
 	/**
 	 * 打印机走纸(强制换行，结束之前的打印内容后走纸n行)
@@ -107,12 +237,12 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	 * @param callback  结果回调
 	 * @return
 	 */
-	 @ReactMethod
+	@ReactMethod
 	public void lineWrap(int n,final Promise p){
-			final IWoyouService ss = woyouService;
+		final IWoyouService ss = woyouService;
 		final int count  = n;
-		 	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.lineWrap(count,new ICallback.Stub(){
@@ -139,8 +269,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
@@ -152,8 +281,8 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	public void sendRAWData(String base64EncriptedData,final Promise p){
 		final IWoyouService ss = woyouService;
 		final byte[] d  = Base64.decode(base64EncriptedData,Base64.DEFAULT) ;
-		 	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.sendRAWData(d,new ICallback.Stub(){
@@ -180,10 +309,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
-
-
+		});
 	}
 
 	/**
@@ -191,12 +317,12 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* @param alignment:	对齐方式 0--居左 , 1--居中, 2--居右
 	* @param callback  结果回调
 	*/
-	 @ReactMethod
+	@ReactMethod
 	public void setAlignment(int alignment,final Promise p){
 		final IWoyouService ss = woyouService;
 		final int align  = alignment;
-		 	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.setAlignment(align,new ICallback.Stub(){
@@ -223,9 +349,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
-
+		});
 	}
 
 	/**
@@ -233,12 +357,12 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* (目前只支持一种字体"gh"，gh是一种等宽中文字体，之后会提供更多字体选择)
 	* @param typeface:		字体名称
 	*/
-	 @ReactMethod
+ 	@ReactMethod
 	public void setFontName(String typeface,final Promise p){
 		final IWoyouService ss = woyouService;
 		final String tf = typeface;
-		 	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.setFontName(tf,new ICallback.Stub(){
@@ -265,8 +389,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
@@ -276,12 +399,12 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* 因此按等宽字体形成的排版可能会错乱
 	* @param fontsize:	字体大小
 	*/
-	 @ReactMethod
+	@ReactMethod
 	public void setFontSize(float fontsize,final Promise p){
 		final IWoyouService ss = woyouService;
 		final float fs = fontsize;
-		 	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.setFontSize(fs,new ICallback.Stub(){
@@ -308,8 +431,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	
@@ -320,14 +442,14 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* @param typeface:		字体名称（目前只支持"gh"字体）
 	* @param fontsize:		字体大小
 	*/
-	 @ReactMethod
+	@ReactMethod
 	public void printTextWithFont(String text, String typeface, float fontsize,final Promise p){
 		final IWoyouService ss = woyouService;
 		final String txt = text;
 		final String tf = typeface;
 		final float fs = fontsize;
-		 	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.printTextWithFont(txt,tf,fs,new ICallback.Stub(){
@@ -354,8 +476,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
@@ -380,8 +501,8 @@ private static final String TAG = "SunmiInnerPrinterModule";
 		for(int i=0;i<colsAlign.size();i++){
 			clsa[i] = colsAlign.getInt(i);
 		}
-		 	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.printColumnsText(clst,clsw,clsa,new ICallback.Stub(){
@@ -408,8 +529,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 
@@ -424,40 +544,38 @@ private static final String TAG = "SunmiInnerPrinterModule";
 			byte[] decoded = Base64.decode(data,Base64.DEFAULT);
 			final Bitmap bitMap = bitMapUtils.decodeBitmap(decoded,width,height);
 			ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
-			public void run() {
-				try {
-					ss.printBitmap(bitMap,new ICallback.Stub(){
-						@Override
-						public void onRunResult(boolean isSuccess){
-							if(isSuccess){
-								 p.resolve(null);
-							}else{
-								p.reject("0",isSuccess+"");
+				@Override
+				public void run() {
+					try {
+						ss.printBitmap(bitMap,new ICallback.Stub(){
+							@Override
+							public void onRunResult(boolean isSuccess){
+								if(isSuccess){
+									 p.resolve(null);
+								}else{
+									p.reject("0",isSuccess+"");
+								}
 							}
-						}
-						@Override
-						public void onReturnString(String result){
-							p.resolve(result);
-						}
-						@Override
-						public void  onRaiseException(int code, String msg){
-							p.reject(""+code,msg);
-						}
-					});
-				} catch (Exception e) {
-					e.printStackTrace();
-						Log.i(TAG,"ERROR: " + e.getMessage());
-						p.reject(""+0,e.getMessage());
+							@Override
+							public void onReturnString(String result){
+								p.resolve(result);
+							}
+							@Override
+							public void  onRaiseException(int code, String msg){
+								p.reject(""+code,msg);
+							}
+						});
+					} catch (Exception e) {
+						e.printStackTrace();
+							Log.i(TAG,"ERROR: " + e.getMessage());
+							p.reject(""+0,e.getMessage());
+					}
 				}
-			}
-
-  	});
+			});
 		}catch(Exception e){
 			e.printStackTrace();
-						Log.i(TAG,"ERROR: " + e.getMessage());
+			Log.i(TAG,"ERROR: " + e.getMessage());
 		}
-
 	}
 
 	/**
@@ -477,18 +595,18 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* @param width: 		条码宽度, 取值2至6, 默认2
 	* @param textposition:	文字位置 0--不打印文字, 1--文字在条码上方, 2--文字在条码下方, 3--条码上下方均打印
 	*/
-	 @ReactMethod
+	@ReactMethod
 	public void printBarCode(String data, int symbology, int height, int width, int textposition,final Promise p){
 		final IWoyouService ss = woyouService;
-			Log.i(TAG,"come: ss:"+ss);
-  	final String d = data;
-  	final int s = symbology;
-  	final int h = height;
-  	final int w = width;
-  	final int tp = textposition;
+		Log.i(TAG,"come: ss:"+ss);
+		final String d = data;
+		final int s = symbology;
+		final int h = height;
+		final int w = width;
+		final int tp = textposition;
 
-  	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.printBarCode(d,s,h,w,tp,new ICallback.Stub(){
@@ -511,12 +629,11 @@ private static final String TAG = "SunmiInnerPrinterModule";
 					});
 				} catch (Exception e) {
 					e.printStackTrace();
-						Log.i(TAG,"ERROR: " + e.getMessage());
-						p.reject(""+0,e.getMessage());
+					Log.i(TAG,"ERROR: " + e.getMessage());
+					p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
@@ -529,15 +646,15 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	*                2 -- 纠错级别Q (25%)，
 	*                3 -- 纠错级别H (30%)
 	*/
-	 @ReactMethod
+	@ReactMethod
 	public void printQRCode(String data, int modulesize, int errorlevel,final Promise p){
 		final IWoyouService ss = woyouService;
-  	Log.i(TAG,"come: ss:"+ss);
-  	final String d = data;
-  	final int size = modulesize;
-  	final int level = errorlevel;
-  	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		Log.i(TAG,"come: ss:"+ss);
+		final String d = data;
+		final int size = modulesize;
+		final int level = errorlevel;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.printQRCode(d,size,level,new ICallback.Stub(){
@@ -564,8 +681,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
@@ -574,13 +690,13 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* @param text:	要打印的文字字符串
 	*
 	*/
-	 @ReactMethod
+	@ReactMethod
 	public void printOriginalText(String text,final Promise p){
-	final IWoyouService ss = woyouService;
-  	Log.i(TAG,"come: "+text+" ss:"+ss);
-  	final String txt = text;
-  	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		final IWoyouService ss = woyouService;
+		Log.i(TAG,"come: "+text+" ss:"+ss);
+		final String txt = text;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.printOriginalText(txt,new ICallback.Stub(){
@@ -607,19 +723,18 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						p.reject(""+0,e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
 	* 打印缓冲区内容
 	*/
-	 @ReactMethod
+	@ReactMethod
 	public void commitPrinterBuffer(){
-			 	final IWoyouService ss = woyouService;
-  	Log.i(TAG,"come: commit buffter ss:"+ss);
-  	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		final IWoyouService ss = woyouService;
+		Log.i(TAG,"come: commit buffter ss:"+ss);
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.commitPrinterBuffer();
@@ -628,8 +743,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						Log.i(TAG,"ERROR: " + e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
@@ -638,13 +752,13 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* @param clean: 是否清除缓冲区内容
 	*
 	*/
-	 @ReactMethod
+ 	@ReactMethod
 	public void enterPrinterBuffer(boolean clean){
-		 	final IWoyouService ss = woyouService;
-  	Log.i(TAG,"come: " + clean+" ss:"+ss);
-  	final boolean c = clean;
-  	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		final IWoyouService ss = woyouService;
+		Log.i(TAG,"come: " + clean+" ss:"+ss);
+		final boolean c = clean;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.enterPrinterBuffer(c);
@@ -653,8 +767,7 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						Log.i(TAG,"ERROR: " + e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 	/**
@@ -663,13 +776,13 @@ private static final String TAG = "SunmiInnerPrinterModule";
 	* @param commit: 是否打印出缓冲区内容
 	*
 	*/
-	  @ReactMethod
+	@ReactMethod
 	public void exitPrinterBuffer(boolean commit){
-			final IWoyouService ss = woyouService;
-  	Log.i(TAG,"come: " + commit+" ss:"+ss);
-  	final boolean com = commit;
-  	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+ 		final IWoyouService ss = woyouService;
+		Log.i(TAG,"come: " + commit+" ss:"+ss);
+		final boolean com = commit;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.exitPrinterBuffer(com);
@@ -678,19 +791,18 @@ private static final String TAG = "SunmiInnerPrinterModule";
 						Log.i(TAG,"ERROR: " + e.getMessage());
 				}
 			}
-
-  	});
+		});
 	}
 
 
 
   @ReactMethod
   public void printString(String message,final Promise p) {
-  	final IWoyouService ss = woyouService;
-  	Log.i(TAG,"come: " + message+" ss:"+ss);
-  	final String msgs = message;
-  	ThreadPoolManager.getInstance().executeTask(new Runnable(){
-	@Override
+		final IWoyouService ss = woyouService;
+		Log.i(TAG,"come: " + message+" ss:"+ss);
+		final String msgs = message;
+		ThreadPoolManager.getInstance().executeTask(new Runnable(){
+			@Override
 			public void run() {
 				try {
 					ss.printText(msgs,new ICallback.Stub(){
@@ -713,13 +825,11 @@ private static final String TAG = "SunmiInnerPrinterModule";
 					});
 				} catch (Exception e) {
 					e.printStackTrace();
-						Log.i(TAG,"ERROR: " + e.getMessage());
-						p.reject(""+0,e.getMessage());
+					Log.i(TAG,"ERROR: " + e.getMessage());
+					p.reject(""+0,e.getMessage());
 				}
 			}
+		});
+  }
 
-  	});
-  
-  }
-    
-  }
+}
