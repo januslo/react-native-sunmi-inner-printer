@@ -1,5 +1,6 @@
 package com.sunmi.innerprinter;
 
+import android.content.BroadcastReceiver;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -29,9 +30,32 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import android.content.IntentFilter;
+
 public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	private IWoyouService woyouService;
 	private BitmapUtils bitMapUtils;
+	private PrinterReceiver receiver = new PrinterReceiver();
+
+	// 缺纸异常
+	public final static String OUT_OF_PAPER_ACTION = "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION";
+	// 打印错误
+	public final static String ERROR_ACTION = "woyou.aidlservice.jiuv5.ERROR_ACTION";
+	// 可以打印
+	public final static String NORMAL_ACTION = "woyou.aidlservice.jiuv5.NORMAL_ACTION";
+	// 开盖子
+	public final static String COVER_OPEN_ACTION = "woyou.aidlservice.jiuv5.COVER_OPEN_ACTION";
+	// 关盖子异常
+	public final static String COVER_ERROR_ACTION = "woyou.aidlservice.jiuv5.COVER_ERROR_ACTION";
+	// 切刀异常1－卡切刀
+	public final static String KNIFE_ERROR_1_ACTION = "woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_1";
+	// 切刀异常2－切刀修复
+	public final static String KNIFE_ERROR_2_ACTION = "woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_2";
+	// 打印头过热异常
+	public final static String OVER_HEATING_ACITON = "woyou.aidlservice.jiuv5.OVER_HEATING_ACITON";
+	// 打印机固件开始升级
+	public final static String FIRMWARE_UPDATING_ACITON = "woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON";
 
 	private ServiceConnection connService =  new ServiceConnection() {
 		@Override
@@ -48,7 +72,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	};
 
 	private static final String TAG = "SunmiInnerPrinterModule";
-  public SunmiInnerPrinterModule(ReactApplicationContext reactContext) {
+	public SunmiInnerPrinterModule(ReactApplicationContext reactContext) {
 		super(reactContext);
 
 		Intent intent = new Intent();
@@ -57,12 +81,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 		reactContext.startService(intent);
 		reactContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
 		bitMapUtils = new BitmapUtils(reactContext);
-  }
 
-  @Override
-  public String getName() {
+		IntentFilter mFilter = new IntentFilter();
+		mFilter.addAction(OUT_OF_PAPER_ACTION);
+		mFilter.addAction(ERROR_ACTION);
+		mFilter.addAction(NORMAL_ACTION);
+		mFilter.addAction(COVER_OPEN_ACTION);
+		mFilter.addAction(COVER_ERROR_ACTION);
+		mFilter.addAction(KNIFE_ERROR_1_ACTION);
+		mFilter.addAction(KNIFE_ERROR_2_ACTION);
+		mFilter.addAction(OVER_HEATING_ACITON);
+		mFilter.addAction(FIRMWARE_UPDATING_ACITON);
+
+		getReactApplicationContext().registerReceiver(receiver, mFilter);
+
+		Log.d("PrinterReceiver", "------------ init ");
+	}
+
+	@Override
+	public String getName() {
 		return "SunmiInnerPrinter";
-  }
+	}
 
 	/**
 	 * 初始化打印机，重置打印机的逻辑程序，但不清空缓存区数据，因此
@@ -357,7 +396,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	* (目前只支持一种字体"gh"，gh是一种等宽中文字体，之后会提供更多字体选择)
 	* @param typeface:		字体名称
 	*/
- 	@ReactMethod
+	@ReactMethod
 	public void setFontName(String typeface,final Promise p){
 		final IWoyouService ss = woyouService;
 		final String tf = typeface;
@@ -752,7 +791,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	* @param clean: 是否清除缓冲区内容
 	*
 	*/
- 	@ReactMethod
+	@ReactMethod
 	public void enterPrinterBuffer(boolean clean){
 		final IWoyouService ss = woyouService;
 		Log.i(TAG,"come: " + clean+" ss:"+ss);
@@ -778,7 +817,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	*/
 	@ReactMethod
 	public void exitPrinterBuffer(boolean commit){
- 		final IWoyouService ss = woyouService;
+		final IWoyouService ss = woyouService;
 		Log.i(TAG,"come: " + commit+" ss:"+ss);
 		final boolean com = commit;
 		ThreadPoolManager.getInstance().executeTask(new Runnable(){
@@ -796,8 +835,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
 
 
-  @ReactMethod
-  public void printString(String message,final Promise p) {
+	@ReactMethod
+	public void printString(String message,final Promise p) {
 		final IWoyouService ss = woyouService;
 		Log.i(TAG,"come: " + message+" ss:"+ss);
 		final String msgs = message;
@@ -830,6 +869,19 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 				}
 			}
 		});
-  }
+	}
 
+
+	public class PrinterReceiver extends BroadcastReceiver {
+		public PrinterReceiver() {
+		}
+
+		@Override
+		public void onReceive(Context context, Intent data) {
+			String action = data.getAction();
+			Log.d("PrinterReceiver", action);
+			getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+			.emit(action, null);
+		}
+	}
 }

@@ -1,4 +1,24 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sunmi.innerprinter">
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.sunmi.innerprinter">
+  <receiver android:name="com.sunmi.innerprinter.SunmiInnerPrinterModule.PrinterReceiver" android:enabled="true">   
+      <intent-filter android:priority="1000">
+        <!-- 缺纸异常 -->
+        <action android:name="woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION" />  
+        <!-- 打印错误 -->
+        <action android:name="woyou.aidlservice.jiuv5.ERROR_ACTION" />
+        <!-- 可以打印 -->
+        <action android:name="woyou.aidlservice.jiuv5.NORMAL_ACTION" />
+        <!-- 开盖子 -->
+        <action android:name="woyou.aidlservice.jiuv5.COVER_OPEN_ACTION" />
+        <!-- 关盖子异常 -->
+        <action android:name="woyou.aidlservice.jiuv5.COVER_ERROR_ACTION" />
+        <!-- 切刀异常1－卡切刀 -->
+        <action android:name="woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_1" />
+        <!-- 切刀异常2－切刀修复 -->
+        <action android:name="woyou.aidlservice.jiuv5.KNIFE_ERROR_ACTION_2" />
+        <!-- 打印头过热异常 -->
+        <action android:name="woyou.aidlservice.jiuv5.OVER_HEATING_ACITON" />
+        <!-- 打印机固件开始升级 -->
+        <action android:name="woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON" />
+      </intent-filter>  
+  </receiver>  
 </manifest>
