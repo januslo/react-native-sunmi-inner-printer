@@ -33,6 +33,9 @@ import android.content.ServiceConnection;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import android.content.IntentFilter;
 
+import java.util.Map;
+import java.util.HashMap;
+
 public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	private IWoyouService woyouService;
 	private BitmapUtils bitMapUtils;
@@ -102,6 +105,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	public String getName() {
 		return "SunmiInnerPrinter";
 	}
+
+
+	@Override
+	public Map<String, Object> getConstants() {
+		final Map<String, Object> constants = new HashMap<>();
+		final Map<String, Object> constantsChildren = new HashMap<>();
+
+		constantsChildren.put("OUT_OF_PAPER_ACTION", OUT_OF_PAPER_ACTION);
+		constantsChildren.put("ERROR_ACTION", ERROR_ACTION);
+		constantsChildren.put("NORMAL_ACTION", NORMAL_ACTION);
+		constantsChildren.put("COVER_OPEN_ACTION", COVER_OPEN_ACTION);
+		constantsChildren.put("COVER_ERROR_ACTION", COVER_ERROR_ACTION);
+		constantsChildren.put("KNIFE_ERROR_1_ACTION", KNIFE_ERROR_1_ACTION);
+		constantsChildren.put("KNIFE_ERROR_2_ACTION", KNIFE_ERROR_2_ACTION);
+		constantsChildren.put("OVER_HEATING_ACITON", OVER_HEATING_ACITON);
+		constantsChildren.put("FIRMWARE_UPDATING_ACITON", FIRMWARE_UPDATING_ACITON);
+
+		constants.put("Constants", constantsChildren);
+		return constants;
+	}
+
 
 	/**
 	 * 初始化打印机，重置打印机的逻辑程序，但不清空缓存区数据，因此
@@ -879,9 +903,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 		@Override
 		public void onReceive(Context context, Intent data) {
 			String action = data.getAction();
+			String type = "PrinterStatus";
 			Log.d("PrinterReceiver", action);
 			getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-			.emit(action, null);
+			.emit(type, action);
 		}
 	}
 }
