@@ -36,5 +36,5 @@ repositories {
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
-    compile files('libs/zxing.jar')
+    compile "com.google.zxing:core:3.2.1"
 }
