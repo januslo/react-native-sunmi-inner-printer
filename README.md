@@ -29,7 +29,7 @@ npm install https://github.com/januslo/react-native-sunmi-inner-printer.git --sa
 Links this plugin to your project.
 
 ```bash
-react-native link react-natvie-sunmi-inner-printer
+react-native link react-native-sunmi-inner-printer
 ```
 
 or you may need to link manually 
