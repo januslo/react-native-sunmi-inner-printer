@@ -123,6 +123,9 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 		constantsChildren.put("FIRMWARE_UPDATING_ACITON", FIRMWARE_UPDATING_ACITON);
 
 		constants.put("Constants", constantsChildren);
+
+		constants.put("hasPrinter", hasPrinter());
+
 		return constants;
 	}
 
@@ -245,16 +248,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
 	/**
 	 * 是否存在打印机服务
+	 * return {boolean}
 	 */
-	@ReactMethod
-	public void hasPrinter(final Promise p) {
-		try {
-			final IWoyouService printerService = woyouService;
-			final boolean hasPrinterService = printerService != null;
-			p.resolve(hasPrinterService);
-		} catch (Exception e) {
-			p.reject("" + 0, e.getMessage());
-		}
+	private boolean hasPrinter() {
+		final IWoyouService printerService = woyouService;
+		final boolean hasPrinterService = printerService != null;
+		return hasPrinterService;
 	}
 
 	/**
