@@ -239,9 +239,18 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	/**
 	* 获取打印机型号
 	*/
-	// @ReactMethod
-	// public void getPrinterModal(Promise p){
-	// }
+	 @ReactMethod
+	 public void getPrinterModal(final Promise p){
+		 //Caution: This method is not fully test -- Januslo 2018-08-11
+		 try{
+			 final IWoyouService printerService = woyouService;
+			 String modal = printerService.getPrinterModal();
+			 p.resolve(modal);
+		 }catch(Exception e){
+			 Log.i(TAG, "ERROR: " + e.getMessage());
+			 p.reject("" + 0, e.getMessage());
+		 }
+	 }
 
 	/**
 	 * 是否存在打印机服务
