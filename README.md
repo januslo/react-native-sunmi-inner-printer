@@ -1,6 +1,7 @@
 # react-native-sunmi-inner-printer
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/januslo/react-native-sunmi-inner-printer/master/LICENSE) [![npm version](https://badge.fury.io/js/react-native-sunmi-inner-printer.svg)](https://www.npmjs.com/package/react-native-sunmi-inner-printer)
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/januslo/react-native-sunmi-inner-printer/master/LICENSE) [![npm version](https://badge.fury.io/js/react-native-sunmi-inner-printer.svg)](https://badge.fury.io/js/react-native-sunmi-inner-printer)
+
 http://docs.sunmi.com/htmls/index.html?lang=zh##V1文档资源
 根据商米V1文档开发打印接口
 (React native plugin Referring the sunmi V1 printer document and demos)
