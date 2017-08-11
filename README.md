@@ -79,6 +79,16 @@ See examples folder of the source code that you can find a simple example of pri
 
 ## API
 
+### Constants
+| Name | Description|
+|:-----:|:-----------:|
+| Constants | 打印状态常量 |
+| hasPrinter | boolean,是否有打印机 |
+| printerVersion | 打印机固件版本 |
+| printerSerialNo | 打印机序列号 |
+| printerModal | 打印机型号 |
+
+
 ### Printer Status
 
 |  Name | Description |

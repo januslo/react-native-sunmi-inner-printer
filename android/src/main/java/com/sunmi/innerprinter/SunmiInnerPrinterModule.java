@@ -126,6 +126,25 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
 		constants.put("hasPrinter", hasPrinter());
 
+		try {
+			constants.put("printerVersion", getPrinterVersion());
+		}catch(Exception e){
+			// Log and ignore for it is not the madatory constants.
+			Log.i(TAG, "ERROR: " + e.getMessage());
+		}
+		try{
+			constants.put("printerSerialNo", getPrinterSerialNo());
+		}catch(Exception e){
+			// Log and ignore for it is not the madatory constants.
+			Log.i(TAG, "ERROR: " + e.getMessage());
+		}
+		try{
+			constants.put("printerModal",getPrinterModal());
+		}catch(Exception e){
+			// Log and ignore for it is not the madatory constants.
+			Log.i(TAG, "ERROR: " + e.getMessage());
+		}
+
 		return constants;
 	}
 
@@ -213,14 +232,16 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	public void getPrinterSerialNo(final Promise p) {
 		try {
-			final IWoyouService printerService = woyouService;
-			String sn = printerService.getPrinterSerialNo();
-			p.resolve(sn);
+			p.resolve(getPrinterSerialNo());
 		}
 		catch (Exception e) {
 			Log.i(TAG, "ERROR: " + e.getMessage());
 			p.reject("" + 0, e.getMessage());
 		}
+	}
+	private String getPrinterSerialNo()throws Exception{
+		final IWoyouService printerService = woyouService;
+		return printerService.getPrinterSerialNo();
 	}
 
 	/**
@@ -229,14 +250,16 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	public void getPrinterVersion(final Promise p) {
 		try {
-			final IWoyouService printerService = woyouService;
-			String version = printerService.getPrinterVersion();
-			p.resolve(version);
+			p.resolve(getPrinterVersion());
 		}
 		catch (Exception e) {
 			Log.i(TAG, "ERROR: " + e.getMessage());
 			p.reject("" + 0, e.getMessage());
 		}
+	}
+	private String getPrinterVersion()throws Exception{
+		final IWoyouService printerService = woyouService;
+		return printerService.getPrinterVersion();
 	}
 
 	/**
@@ -244,16 +267,29 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 	*/
 	 @ReactMethod
 	 public void getPrinterModal(final Promise p){
-		 //Caution: This method is not fully test -- Januslo 2018-08-11
 		 try{
-			 final IWoyouService printerService = woyouService;
-			 String modal = printerService.getPrinterModal();
-			 p.resolve(modal);
+			 p.resolve(getPrinterModal());
 		 }catch(Exception e){
 			 Log.i(TAG, "ERROR: " + e.getMessage());
 			 p.reject("" + 0, e.getMessage());
 		 }
 	 }
+
+	private String getPrinterModal()throws Exception{
+		//Caution: This method is not fully test -- Januslo 2018-08-11
+		final IWoyouService printerService = woyouService;
+		return printerService.getPrinterModal();
+	}
+
+	@ReactMethod
+	public void hasPrinter(final Promise p){
+		try{
+			p.resolve(hasPrinter());
+		}catch(Exception e){
+			Log.i(TAG, "ERROR: " + e.getMessage());
+			p.reject("" + 0, e.getMessage());
+		}
+	}
 
 	/**
 	 * 是否存在打印机服务
