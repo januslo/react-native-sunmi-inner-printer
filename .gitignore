@@ -5,6 +5,7 @@
 # IntelliJ project files
 .idea
 *.iml
+*.log
 out
 gen
 examples/node_modules
