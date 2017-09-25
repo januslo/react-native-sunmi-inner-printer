@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.sunmi.innerprinter">
+  <application>
   <receiver android:name="com.sunmi.innerprinter.SunmiInnerPrinterModule.PrinterReceiver" android:enabled="true">   
       <intent-filter android:priority="1000">
         <!-- 缺纸异常 -->
@@ -20,5 +21,6 @@
         <!-- 打印机固件开始升级 -->
         <action android:name="woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON" />
       </intent-filter>  
-  </receiver>  
+  </receiver>
+  </application>
 </manifest>
