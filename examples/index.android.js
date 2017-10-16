@@ -10,7 +10,9 @@ import {
   StyleSheet,
   Text,
   View,
-    Button
+    Button,
+    DeviceEventEmitter,
+Alert
 } from 'react-native';
 
 import SunmiInnerPrinter from 'react-native-sunmi-inner-printer';
@@ -87,6 +89,51 @@ export default class examples extends Component {
 
     }
 
+    constructor(props){
+        super(props);
+        this.state={
+            printer_status:""
+        }
+    }
+    componentWillMount() {
+        try {
+            this._printerStatusListener = DeviceEventEmitter.addListener('PrinterStatus', action => {
+                switch (action) {
+                    case SunmiInnerPrinter.Constants.NORMAL_ACTION:   // 可以打印
+                        // your code
+                        this.setState({
+                            printer_status:"printer normal"
+                        });
+                        break;
+                    case SunmiInnerPrinter.Constants.OUT_OF_PAPER_ACTION:  // 缺纸异常
+                        // your code
+                        this.setState({
+                            printer_status:"printer out out page"
+                        });
+                        break;
+                    case SunmiInnerPrinter.Constants.COVER_OPEN_ACTION:   // 开盖子
+                        // your code
+                        this.setState({
+                            printer_status:"printer cover open"
+                        });
+                        break;
+                    default:
+                    // your code
+                        this.setState({
+                            printer_status:"printer status:"+action
+                        });
+                }
+            });
+        }catch(e){
+            this.setState({
+                printer_status:"printer error:"+e.message
+            });
+        };
+    }
+    componentWillUnmount() {
+        this._printerStatusListener.remove();
+    }
+
   render() {
     return (
       <View style={styles.container}>
@@ -101,6 +148,7 @@ export default class examples extends Component {
           Shake or press menu button for dev menu
         </Text>
           <Button title="打印标签" onPress={()=>{this._printRecieve() }}></Button>
+          <Text>{"Printer Status ["+this.state.printer_status+']'}</Text>
       </View>
     );
   }

@@ -41,9 +41,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
+    public static ReactApplicationContext reactApplicationContext;
     private IWoyouService woyouService;
     private BitmapUtils bitMapUtils;
-    private PrinterReceiver receiver = new PrinterReceiver();
+    private PrinterReceiver receiver=new PrinterReceiver();
 
     // 缺纸异常
     public final static String OUT_OF_PAPER_ACTION = "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION";
@@ -82,14 +83,13 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
     public SunmiInnerPrinterModule(ReactApplicationContext reactContext) {
         super(reactContext);
-
-        Intent intent = new Intent();
+        reactApplicationContext = reactContext;
+       Intent intent = new Intent();
         intent.setPackage("woyou.aidlservice.jiuiv5");
         intent.setAction("woyou.aidlservice.jiuiv5.IWoyouService");
         reactContext.startService(intent);
         reactContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
         bitMapUtils = new BitmapUtils(reactContext);
-
         IntentFilter mFilter = new IntentFilter();
         mFilter.addAction(OUT_OF_PAPER_ACTION);
         mFilter.addAction(ERROR_ACTION);
@@ -100,9 +100,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         mFilter.addAction(KNIFE_ERROR_2_ACTION);
         mFilter.addAction(OVER_HEATING_ACITON);
         mFilter.addAction(FIRMWARE_UPDATING_ACITON);
-
         getReactApplicationContext().registerReceiver(receiver, mFilter);
-
         Log.d("PrinterReceiver", "------------ init ");
     }
 
@@ -980,22 +978,5 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 }
             }
         });
-    }
-
-
-    public static class PrinterReceiver extends BroadcastReceiver {
-        public PrinterReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent data) {
-            String action = data.getAction();
-            String type = "PrinterStatus";
-            Log.d("PrinterReceiver", action);
-            if (context instanceof ReactContext) {
-                ((ReactContext) context).getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit(type, action);
-            }
-        }
     }
 }
