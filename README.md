@@ -19,7 +19,7 @@ for scanner, refer this: https://github.com/januslo/react-native-sunmi-inner-sca
 install with npm: [Check in NPM](https://www.npmjs.com/package/react-native-sunmi-inner-printer)
 
 ```bash
-npm install react-natvie-sunmi-inner-printer --save
+npm install react-native-sunmi-inner-printer --save
 ```
 
 or you may need to install via the clone address directly:
