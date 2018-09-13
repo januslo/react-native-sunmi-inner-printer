@@ -12,3 +12,4 @@ examples/node_modules
 examples/android/build
 examples/android/app/build
 examples/android/.gradle
+android/build
