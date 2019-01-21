@@ -17,7 +17,10 @@ public class PrinterReceiver extends BroadcastReceiver {
         String action = data.getAction();
         String type = "PrinterStatus";
         Log.d("PrinterReceiver", action);
+
+        if (SunmiInnerPrinterModule.reactApplicationContext != null) {
             SunmiInnerPrinterModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                     .emit(type, action);
+        }
     }
 }

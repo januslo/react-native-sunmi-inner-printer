@@ -41,10 +41,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
-    public static ReactApplicationContext reactApplicationContext;
+    public static ReactApplicationContext reactApplicationContext = null;
     private IWoyouService woyouService;
     private BitmapUtils bitMapUtils;
-    private PrinterReceiver receiver=new PrinterReceiver();
+    private PrinterReceiver receiver = new PrinterReceiver();
 
     // 缺纸异常
     public final static String OUT_OF_PAPER_ACTION = "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION";
