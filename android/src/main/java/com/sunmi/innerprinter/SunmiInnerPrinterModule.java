@@ -1,6 +1,8 @@
 package com.sunmi.innerprinter;
 
 import android.content.BroadcastReceiver;
+
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -167,6 +169,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     printerService.printerInit(new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -207,6 +214,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             public void run() {
                 try {
                     printerService.printerSelfChecking(new ICallback.Stub() {
+                        @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
                         @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
@@ -322,6 +334,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     printerService.getPrintedLength(new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -366,6 +383,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     ss.lineWrap(count, new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -408,6 +430,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             public void run() {
                 try {
                     ss.sendRAWData(d, new ICallback.Stub() {
+                        @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
                         @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
@@ -452,6 +479,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     ss.setAlignment(align, new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -494,6 +526,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             public void run() {
                 try {
                     ss.setFontName(tf, new ICallback.Stub() {
+                        @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
                         @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
@@ -539,6 +576,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             public void run() {
                 try {
                     ss.setFontSize(fs, new ICallback.Stub() {
+                        @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
                         @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
@@ -586,6 +628,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             public void run() {
                 try {
                     ss.printTextWithFont(txt, tf, fs, new ICallback.Stub() {
+                        @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
                         @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
@@ -643,6 +690,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     ss.printColumnsText(clst, clsw, clsa, new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -687,6 +739,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 public void run() {
                     try {
                         ss.printBitmap(bitMap, new ICallback.Stub() {
+                            @Override
+                            public void onPrintResult(int par1, String par2) {
+                                Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                            }
+
                             @Override
                             public void onRunResult(boolean isSuccess) {
                                 if (isSuccess) {
@@ -753,6 +810,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     ss.printBarCode(d, s, h, w, tp, new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -804,6 +866,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     ss.printQRCode(d, size, level, new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -847,6 +914,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             public void run() {
                 try {
                     ss.printOriginalText(txt, new ICallback.Stub() {
+                        @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
                         @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
@@ -953,6 +1025,11 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 try {
                     ss.printText(msgs, new ICallback.Stub() {
                         @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
                         public void onRunResult(boolean isSuccess) {
                             if (isSuccess) {
                                 p.resolve(null);
@@ -975,6 +1052,46 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
                     p.reject("" + 0, e.getMessage());
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void clearBuffer(final Callback callback) {
+        final IWoyouService ss = woyouService;
+        Log.i(TAG, "Cleaning printer buffer!");
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // TODO: maybe loop here through whole buffer?
+                    ss.enterPrinterBuffer(true);
+
+                    ss.exitPrinterBufferWithCallback(false, new ICallback.Stub() {
+                        @Override
+                        public void onPrintResult(int par1, String par2) {
+                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                        }
+
+                        @Override
+                        public void onRunResult(boolean isSuccess) {
+                            callback.invoke(isSuccess);
+                        }
+
+                        @Override
+                        public void onReturnString(String result) {
+                            // callback.invoke(isSuccess);
+                        }
+
+                        @Override
+                        public void onRaiseException(int code, String msg) {
+                            callback.invoke(false);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
                 }
             }
         });
