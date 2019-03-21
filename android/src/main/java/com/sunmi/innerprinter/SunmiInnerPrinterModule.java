@@ -86,7 +86,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public SunmiInnerPrinterModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactApplicationContext = reactContext;
-       Intent intent = new Intent();
+        Intent intent = new Intent();
         intent.setPackage("woyou.aidlservice.jiuiv5");
         intent.setAction("woyou.aidlservice.jiuiv5.IWoyouService");
         reactContext.startService(intent);
@@ -1058,21 +1058,36 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void clearBuffer(final Callback callback) {
+    public void clearBuffer() {
         final IWoyouService ss = woyouService;
-        Log.i(TAG, "Cleaning printer buffer!");
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    // TODO: maybe loop here through whole buffer?
-                    ss.enterPrinterBuffer(true);
+                    ss.clearBuffer();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "ERROR: " + e.getMessage());
+                }
+            }
+        });
+    }
 
-                    ss.exitPrinterBufferWithCallback(false, new ICallback.Stub() {
+    @ReactMethod
+    public void exitPrinterBufferWithCallback(final boolean commit, final Callback callback) {
+        final IWoyouService ss = woyouService;
+        ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ss.exitPrinterBufferWithCallback(commit, new ICallback.Stub() {
                         @Override
-                        public void onPrintResult(int par1, String par2) {
-                            Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
-                            callback.invoke(true);
+                        public void onPrintResult(int code, String msg) {
+                            Log.d(TAG, "ON PRINT RES: " + code + ", " + msg);
+                            if (code == 0)
+                                callback.invoke(true);
+                            else
+                                callback.invoke(false);
                         }
 
                         @Override
