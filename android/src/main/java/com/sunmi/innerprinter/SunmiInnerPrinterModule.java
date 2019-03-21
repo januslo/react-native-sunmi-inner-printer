@@ -1072,6 +1072,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
+                            callback.invoke(true);
                         }
 
                         @Override
@@ -1092,6 +1093,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
+                    callback.invoke(false);
                 }
             }
         });
