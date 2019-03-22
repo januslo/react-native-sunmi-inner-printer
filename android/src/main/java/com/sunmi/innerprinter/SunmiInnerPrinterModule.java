@@ -1064,8 +1064,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.enterPrinterBuffer(true);
-                    ss.exitPrinterBuffer(false);
+                    ss.clearBuffer();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
