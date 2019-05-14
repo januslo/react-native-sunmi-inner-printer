@@ -47,6 +47,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     private IWoyouService woyouService;
     private BitmapUtils bitMapUtils;
     private PrinterReceiver receiver = new PrinterReceiver();
+    private boolean transactionMode = false;
 
     // 缺纸异常
     public final static String OUT_OF_PAPER_ACTION = "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION";
@@ -1032,6 +1033,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void enterPrinterBuffer(boolean clean) {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + clean + " ss:" + ss);
+        transactionMode = true;
         final boolean c = clean;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
@@ -1055,6 +1057,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void exitPrinterBuffer(boolean commit) {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + commit + " ss:" + ss);
+        transactionMode = false;
         final boolean com = commit;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
@@ -1136,6 +1139,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void exitPrinterBufferWithCallback(final boolean commit, final Callback callback) {
         final IWoyouService ss = woyouService;
+        transactionMode = false;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -1143,7 +1147,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                     ss.exitPrinterBufferWithCallback(commit, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int code, String msg) {
-                            Log.d(TAG, "ON PRINT RES: " + code + ", " + msg);
+                            Log.i(TAG, "ON PRINT RES: " + code + ", " + msg);
                             if (code == 0)
                                 callback.invoke(true);
                             else
