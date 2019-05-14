@@ -47,7 +47,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     private IWoyouService woyouService;
     private BitmapUtils bitMapUtils;
     private PrinterReceiver receiver = new PrinterReceiver();
-    private boolean transactionMode = false;
 
     // 缺纸异常
     public final static String OUT_OF_PAPER_ACTION = "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION";
@@ -164,11 +163,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void printerInit(final Promise p) {
         final IWoyouService printerService = woyouService;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -215,11 +209,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void printerSelfChecking(final Promise p) {
         final IWoyouService printerService = woyouService;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -339,11 +328,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getPrintedLength(final Promise p) {
         final IWoyouService printerService = woyouService;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -393,11 +377,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void lineWrap(int n, final Promise p) {
         final IWoyouService ss = woyouService;
         final int count = n;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -446,11 +425,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void sendRAWData(String base64EncriptedData, final Promise p) {
         final IWoyouService ss = woyouService;
         final byte[] d = Base64.decode(base64EncriptedData, Base64.DEFAULT);
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -499,11 +473,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void setAlignment(int alignment, final Promise p) {
         final IWoyouService ss = woyouService;
         final int align = alignment;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -552,11 +521,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void setFontName(String typeface, final Promise p) {
         final IWoyouService ss = woyouService;
         final String tf = typeface;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -607,11 +571,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void setFontSize(float fontsize, final Promise p) {
         final IWoyouService ss = woyouService;
         final float fs = fontsize;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -664,11 +623,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final String txt = text;
         final String tf = typeface;
         final float fs = fontsize;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -730,11 +684,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         for (int i = 0; i < colsAlign.size(); i++) {
             clsa[i] = colsAlign.getInt(i);
         }
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -785,10 +734,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             final IWoyouService ss = woyouService;
             byte[] decoded = Base64.decode(data, Base64.DEFAULT);
             final Bitmap bitMap = bitMapUtils.decodeBitmap(decoded, width, height);
-
-            if (transactionMode) {
-                p.resolve(true);
-            }
             ThreadPoolManager.getInstance().executeTask(new Runnable() {
                 @Override
                 public void run() {
@@ -859,10 +804,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final int w = width;
         final int tp = textposition;
 
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -919,11 +860,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final String d = data;
         final int size = modulesize;
         final int level = errorlevel;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -973,11 +909,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + text + " ss:" + ss);
         final String txt = text;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -1045,7 +976,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void enterPrinterBuffer(boolean clean) {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + clean + " ss:" + ss);
-        transactionMode = true;
         final boolean c = clean;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
@@ -1069,7 +999,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public void exitPrinterBuffer(boolean commit) {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + commit + " ss:" + ss);
-        transactionMode = false;
         final boolean com = commit;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
@@ -1090,11 +1019,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final IWoyouService ss = woyouService;
         Log.i(TAG, "come: " + message + " ss:" + ss);
         final String msgs = message;
-
-        if (transactionMode) {
-            p.resolve(true);
-        }
-
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -1152,7 +1076,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void exitPrinterBufferWithCallback(final boolean commit, final Callback callback) {
         final IWoyouService ss = woyouService;
-        transactionMode = false;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
@@ -1160,7 +1083,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                     ss.exitPrinterBufferWithCallback(commit, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int code, String msg) {
-                            Log.i(TAG, "ON PRINT RES: " + code + ", " + msg);
+                            Log.d(TAG, "ON PRINT RES: " + code + ", " + msg);
                             if (code == 0)
                                 callback.invoke(true);
                             else
