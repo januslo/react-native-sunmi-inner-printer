@@ -192,6 +192,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -238,6 +242,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -357,6 +365,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -406,6 +418,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -454,6 +470,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -502,6 +522,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -550,6 +574,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -600,6 +628,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -652,6 +684,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -713,6 +749,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -763,6 +803,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                                 p.reject("" + code, msg);
                             }
                         });
+
+                        if (transactionMode) {
+                            p.resolve(true);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.i(TAG, "ERROR: " + e.getMessage());
@@ -833,6 +877,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -889,6 +937,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -938,6 +990,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -1048,6 +1104,10 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                             p.reject("" + code, msg);
                         }
                     });
+
+                    if (transactionMode) {
+                        p.resolve(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
