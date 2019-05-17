@@ -391,6 +391,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final IWoyouService ss = woyouService;
         final int count = n;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            boolean resolved = false;
+
             @Override
             public void run() {
                 try {
@@ -402,6 +404,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onRunResult(boolean isSuccess) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
+
                             if (isSuccess) {
                                 p.resolve(null);
                             } else {
@@ -411,16 +419,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onReturnString(String result) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.resolve(result);
                         }
 
                         @Override
                         public void onRaiseException(int code, String msg) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.reject("" + code, msg);
                         }
                     });
 
-                    if (transactionMode) {
+                    if (transactionMode && !resolved) {
+                        resolved = true;
                         p.resolve(true);
                     }
                 } catch (Exception e) {
@@ -495,6 +514,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final IWoyouService ss = woyouService;
         final int align = alignment;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            boolean resolved = false;
+
             @Override
             public void run() {
                 try {
@@ -506,6 +527,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onRunResult(boolean isSuccess) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
+
                             if (isSuccess) {
                                 p.resolve(null);
                             } else {
@@ -515,16 +542,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onReturnString(String result) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.resolve(result);
                         }
 
                         @Override
                         public void onRaiseException(int code, String msg) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.reject("" + code, msg);
                         }
                     });
 
-                    if (transactionMode) {
+                    if (transactionMode && !resolved) {
+                        resolved = true;
                         p.resolve(true);
                     }
                 } catch (Exception e) {
@@ -601,6 +639,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final IWoyouService ss = woyouService;
         final float fs = fontsize;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            boolean resolved = false;
+
             @Override
             public void run() {
                 try {
@@ -612,6 +652,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onRunResult(boolean isSuccess) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
+
                             if (isSuccess) {
                                 p.resolve(null);
                             } else {
@@ -621,16 +667,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onReturnString(String result) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.resolve(result);
                         }
 
                         @Override
                         public void onRaiseException(int code, String msg) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.reject("" + code, msg);
                         }
                     });
 
-                    if (transactionMode) {
+                    if (transactionMode && !resolved) {
+                        resolved = true;
                         p.resolve(true);
                     }
                 } catch (Exception e) {
@@ -776,6 +833,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             byte[] decoded = Base64.decode(data, Base64.DEFAULT);
             final Bitmap bitMap = bitMapUtils.decodeBitmap(decoded, width, height);
             ThreadPoolManager.getInstance().executeTask(new Runnable() {
+                boolean resolved = false;
+
                 @Override
                 public void run() {
                     try {
@@ -787,6 +846,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                             @Override
                             public void onRunResult(boolean isSuccess) {
+                                if (resolved) {
+                                    return;
+                                }
+
+                                resolved = true;
+
                                 if (isSuccess) {
                                     p.resolve(null);
                                 } else {
@@ -796,16 +861,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                             @Override
                             public void onReturnString(String result) {
+                                if (resolved) {
+                                    return;
+                                }
+
+                                resolved = true;
                                 p.resolve(result);
                             }
 
                             @Override
                             public void onRaiseException(int code, String msg) {
+                                if (resolved) {
+                                    return;
+                                }
+
+                                resolved = true;
                                 p.reject("" + code, msg);
                             }
                         });
 
-                        if (transactionMode) {
+                        if (transactionMode && !resolved) {
+                            resolved = true;
                             p.resolve(true);
                         }
                     } catch (Exception e) {
@@ -850,6 +926,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final int tp = textposition;
 
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            boolean resolved = false;
+
             @Override
             public void run() {
                 try {
@@ -861,6 +939,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onRunResult(boolean isSuccess) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
+
                             if (isSuccess) {
                                 p.resolve(null);
                             } else {
@@ -870,16 +954,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onReturnString(String result) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.resolve(result);
                         }
 
                         @Override
                         public void onRaiseException(int code, String msg) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.reject("" + code, msg);
                         }
                     });
 
-                    if (transactionMode) {
+                    if (transactionMode && !resolved) {
+                        resolved = true;
                         p.resolve(true);
                     }
                 } catch (Exception e) {
@@ -910,6 +1005,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         final int size = modulesize;
         final int level = errorlevel;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            boolean resolved = false;
+
             @Override
             public void run() {
                 try {
@@ -921,6 +1018,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onRunResult(boolean isSuccess) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
+
                             if (isSuccess) {
                                 p.resolve(null);
                             } else {
@@ -930,16 +1033,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onReturnString(String result) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.resolve(result);
                         }
 
                         @Override
                         public void onRaiseException(int code, String msg) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.reject("" + code, msg);
                         }
                     });
 
-                    if (transactionMode) {
+                    if (transactionMode && !resolved) {
+                        resolved = true;
                         p.resolve(true);
                     }
                 } catch (Exception e) {
@@ -1079,6 +1193,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
         Log.i(TAG, "come: " + message + " ss:" + ss);
         final String msgs = message;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
+            boolean resolved = false;
+
             @Override
             public void run() {
                 try {
@@ -1090,6 +1206,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onRunResult(boolean isSuccess) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
+
                             if (isSuccess) {
                                 p.resolve(null);
                             } else {
@@ -1099,16 +1221,27 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
                         @Override
                         public void onReturnString(String result) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.resolve(result);
                         }
 
                         @Override
                         public void onRaiseException(int code, String msg) {
+                            if (resolved) {
+                                return;
+                            }
+
+                            resolved = true;
                             p.reject("" + code, msg);
                         }
                     });
 
-                    if (transactionMode) {
+                    if (transactionMode && !resolved) {
+                        resolved = true;
                         p.resolve(true);
                     }
                 } catch (Exception e) {
