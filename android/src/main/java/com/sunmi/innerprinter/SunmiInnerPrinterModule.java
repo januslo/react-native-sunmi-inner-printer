@@ -1,6 +1,10 @@
 package com.sunmi.innerprinter;
 
-import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.util.Base64;
+import android.util.Log;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.NativeModule;
@@ -10,32 +14,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.Promise;
-import android.widget.Toast;
 
-import java.util.Map;
-import java.io.IOException;
-
-import android.os.RemoteException;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.util.Base64;
-import android.graphics.Bitmap;
-
-import java.nio.charset.StandardCharsets;
-
-import android.util.Log;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import android.content.IntentFilter;
 import com.sunmi.peripheral.printer.*;
 
 import java.util.Map;
