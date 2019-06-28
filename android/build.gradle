@@ -24,11 +24,6 @@ android {
     lintOptions {
         abortOnError false
     }
-     sourceSets {
-    main {
-          aidl.srcDirs = ['src/main/java']
-      }
-  }
 }
 
 repositories {
@@ -36,6 +31,7 @@ repositories {
 }
 
 dependencies {
+    compile 'com.sunmi:printerlibrary:1.0.6'
     compile 'com.facebook.react:react-native:[0.55.4,)'
     compile "com.google.zxing:core:3.2.1"
 }
