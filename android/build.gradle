@@ -24,11 +24,6 @@ android {
     lintOptions {
         abortOnError false
     }
-     sourceSets {
-    main {
-          aidl.srcDirs = ['src/main/java']
-      }
-  }
 }
 
 repositories {
