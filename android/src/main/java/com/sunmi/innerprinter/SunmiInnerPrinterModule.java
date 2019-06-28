@@ -15,8 +15,6 @@ import android.widget.Toast;
 import java.util.Map;
 import java.io.IOException;
 
-import woyou.aidlservice.jiuiv5.IWoyouService;
-import woyou.aidlservice.jiuiv5.ICallback;
 import android.os.RemoteException;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -38,15 +36,16 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import android.content.IntentFilter;
+import com.sunmi.peripheral.printer.*;
 
 import java.util.Map;
 import java.util.HashMap;
 
 public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public static ReactApplicationContext reactApplicationContext = null;
-    private IWoyouService woyouService;
     private BitmapUtils bitMapUtils;
     private PrinterReceiver receiver = new PrinterReceiver();
+    private SunmiPrinterService printerService = null;
     private boolean transactionMode = false;
 
     // 缺纸异常
@@ -68,17 +67,17 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     // 打印机固件开始升级
     public final static String FIRMWARE_UPDATING_ACITON = "woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON";
 
-    private ServiceConnection connService = new ServiceConnection() {
+    private InnerPrinterCallback printerCallback = new InnerPrinterCallback () {
         @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Log.i(TAG, "Service disconnected: " + name);
-            woyouService = null;
+        public void onDisconnected() {
+          Log.d(TAG, "Printer service connected");
+          printerService = null;
         }
 
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.i(TAG, "Service connected: " + name);
-            woyouService = IWoyouService.Stub.asInterface(service);
+        public void onConnected(SunmiPrinterService service) {
+          Log.d(TAG, "Printer service connected");
+          printerService = service;
         }
     };
 
@@ -87,11 +86,14 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     public SunmiInnerPrinterModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactApplicationContext = reactContext;
-        Intent intent = new Intent();
-        intent.setPackage("woyou.aidlservice.jiuiv5");
-        intent.setAction("woyou.aidlservice.jiuiv5.IWoyouService");
-        reactContext.startService(intent);
-        reactContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
+
+        try {
+            InnerPrinterManager.getInstance().bindService(reactApplicationContext, printerCallback);
+        } catch (Exception e) {
+            Log.e(TAG, "ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         bitMapUtils = new BitmapUtils(reactContext);
         IntentFilter mFilter = new IntentFilter();
         mFilter.addAction(OUT_OF_PAPER_ACTION);
@@ -163,12 +165,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void printerInit(final Promise p) {
-        final IWoyouService printerService = woyouService;
+        final SunmiPrinterService service = printerService;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    printerService.printerInit(new ICallback.Stub() {
+                    service.printerInit(new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -213,12 +215,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void printerSelfChecking(final Promise p) {
-        final IWoyouService printerService = woyouService;
+        final SunmiPrinterService service = printerService;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    printerService.printerSelfChecking(new ICallback.Stub() {
+                    service.printerSelfChecking(new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -270,7 +272,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     }
 
     private String getPrinterSerialNo() throws Exception {
-        final IWoyouService printerService = woyouService;
         return printerService.getPrinterSerialNo();
     }
 
@@ -288,7 +289,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     }
 
     private String getPrinterVersion() throws Exception {
-        final IWoyouService printerService = woyouService;
         return printerService.getPrinterVersion();
     }
 
@@ -307,7 +307,6 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
     private String getPrinterModal() throws Exception {
         //Caution: This method is not fully test -- Januslo 2018-08-11
-        final IWoyouService printerService = woyouService;
         return printerService.getPrinterModal();
     }
 
@@ -326,9 +325,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      * return {boolean}
      */
     private boolean hasPrinter() {
-        final IWoyouService printerService = woyouService;
-        final boolean hasPrinterService = printerService != null;
-        return hasPrinterService;
+        return printerService != null;
     }
 
     /**
@@ -336,12 +333,12 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void getPrintedLength(final Promise p) {
-        final IWoyouService printerService = woyouService;
+        final SunmiPrinterService service = printerService;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    printerService.getPrintedLength(new ICallback.Stub() {
+                    service.getPrintedLength(new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -388,7 +385,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void lineWrap(int n, final Promise p) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
         final int count = n;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             boolean resolved = false;
@@ -396,7 +393,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.lineWrap(count, new ICallback.Stub() {
+                    service.lineWrap(count, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -459,13 +456,13 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void sendRAWData(String base64EncriptedData, final Promise p) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
         final byte[] d = Base64.decode(base64EncriptedData, Base64.DEFAULT);
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.sendRAWData(d, new ICallback.Stub() {
+                    service.sendRAWData(d, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -511,7 +508,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setAlignment(int alignment, final Promise p) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
         final int align = alignment;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             boolean resolved = false;
@@ -519,7 +516,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.setAlignment(align, new ICallback.Stub() {
+                    service.setAlignment(align, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -582,13 +579,13 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setFontName(String typeface, final Promise p) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
         final String tf = typeface;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.setFontName(tf, new ICallback.Stub() {
+                    service.setFontName(tf, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -636,7 +633,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void setFontSize(float fontsize, final Promise p) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
         final float fs = fontsize;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             boolean resolved = false;
@@ -644,7 +641,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.setFontSize(fs, new ICallback.Stub() {
+                    service.setFontSize(fs, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -709,7 +706,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void printTextWithFont(String text, String typeface, float fontsize, final Promise p) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
         final String txt = text;
         final String tf = typeface;
         final float fs = fontsize;
@@ -717,7 +714,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.printTextWithFont(txt, tf, fs, new ICallback.Stub() {
+                    service.printTextWithFont(txt, tf, fs, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -765,7 +762,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void printColumnsText(ReadableArray colsTextArr, ReadableArray colsWidthArr, ReadableArray colsAlign, final Promise p) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
         final String[] clst = new String[colsTextArr.size()];
         for (int i = 0; i < colsTextArr.size(); i++) {
             clst[i] = colsTextArr.getString(i);
@@ -782,7 +779,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.printColumnsText(clst, clsw, clsa, new ICallback.Stub() {
+                    service.printColumnsText(clst, clsw, clsa, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -829,7 +826,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void printBitmap(String data, int width, int height, final Promise p) {
         try {
-            final IWoyouService ss = woyouService;
+            final SunmiPrinterService service = printerService;
             byte[] decoded = Base64.decode(data, Base64.DEFAULT);
             final Bitmap bitMap = bitMapUtils.decodeBitmap(decoded, width, height);
             ThreadPoolManager.getInstance().executeTask(new Runnable() {
@@ -838,7 +835,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
                 @Override
                 public void run() {
                     try {
-                        ss.printBitmap(bitMap, new ICallback.Stub() {
+                        service.printBitmap(bitMap, new ICallback.Stub() {
                             @Override
                             public void onPrintResult(int par1, String par2) {
                                 Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -917,8 +914,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void printBarCode(String data, int symbology, int height, int width, int textposition, final Promise p) {
-        final IWoyouService ss = woyouService;
-        Log.i(TAG, "come: ss:" + ss);
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "printBarCode - " + data);
         final String d = data;
         final int s = symbology;
         final int h = height;
@@ -931,7 +928,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.printBarCode(d, s, h, w, tp, new ICallback.Stub() {
+                    service.printBarCode(d, s, h, w, tp, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -999,8 +996,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void printQRCode(String data, int modulesize, int errorlevel, final Promise p) {
-        final IWoyouService ss = woyouService;
-        Log.i(TAG, "come: ss:" + ss);
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "printQRCode - " + data);
         final String d = data;
         final int size = modulesize;
         final int level = errorlevel;
@@ -1010,7 +1007,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.printQRCode(d, size, level, new ICallback.Stub() {
+                    service.printQRCode(d, size, level, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -1073,14 +1070,14 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void printOriginalText(String text, final Promise p) {
-        final IWoyouService ss = woyouService;
-        Log.i(TAG, "come: " + text + " ss:" + ss);
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "printOriginalText - " + text);
         final String txt = text;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.printOriginalText(txt, new ICallback.Stub() {
+                    service.printOriginalText(txt, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -1123,13 +1120,13 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void commitPrinterBuffer() {
-        final IWoyouService ss = woyouService;
-        Log.i(TAG, "come: commit buffter ss:" + ss);
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "commitPrinterBuffer");
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.commitPrinterBuffer();
+                    service.commitPrinterBuffer();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -1145,15 +1142,15 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void enterPrinterBuffer(boolean clean) {
-        final IWoyouService ss = woyouService;
-        Log.i(TAG, "come: " + clean + " ss:" + ss);
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "enterPrinterBuffer - clean: " + clean);
         transactionMode = true;
         final boolean c = clean;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.enterPrinterBuffer(c);
+                    service.enterPrinterBuffer(c);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -1169,15 +1166,15 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void exitPrinterBuffer(boolean commit) {
-        final IWoyouService ss = woyouService;
-        Log.i(TAG, "come: " + commit + " ss:" + ss);
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "exitPrinterBuffer - commit: " + commit);
         transactionMode = false;
         final boolean com = commit;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.exitPrinterBuffer(com);
+                    service.exitPrinterBuffer(com);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -1189,8 +1186,8 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void printString(String message, final Promise p) {
-        final IWoyouService ss = woyouService;
-        Log.i(TAG, "come: " + message + " ss:" + ss);
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "printString - message: " + message);
         final String msgs = message;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             boolean resolved = false;
@@ -1198,7 +1195,7 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    ss.printText(msgs, new ICallback.Stub() {
+                    service.printText(msgs, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int par1, String par2) {
                             Log.d(TAG, "ON PRINT RES: " + par1 + ", " + par2);
@@ -1255,12 +1252,13 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void clearBuffer() {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "clearBuffer");
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.clearBuffer();
+                    service.clearBuffer();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.i(TAG, "ERROR: " + e.getMessage());
@@ -1271,13 +1269,14 @@ public class SunmiInnerPrinterModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void exitPrinterBufferWithCallback(final boolean commit, final Callback callback) {
-        final IWoyouService ss = woyouService;
+        final SunmiPrinterService service = printerService;
+        Log.d(TAG, "exitPrinterBufferWithCallback - commit: " + commit);
         transactionMode = false;
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
             @Override
             public void run() {
                 try {
-                    ss.exitPrinterBufferWithCallback(commit, new ICallback.Stub() {
+                    service.exitPrinterBufferWithCallback(commit, new ICallback.Stub() {
                         @Override
                         public void onPrintResult(int code, String msg) {
                             Log.i(TAG, "ON PRINT RES: " + code + ", " + msg);
