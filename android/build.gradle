@@ -1,10 +1,11 @@
 buildscript {
     repositories {
+        google()
         jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.1'
     }
 }
 
@@ -23,11 +24,6 @@ android {
     lintOptions {
         abortOnError false
     }
-     sourceSets {
-    main {
-          aidl.srcDirs = ['src/main/java']
-      }
-  }
 }
 
 repositories {
@@ -35,6 +31,7 @@ repositories {
 }
 
 dependencies {
+    compile 'com.sunmi:printerlibrary:1.0.6'
     compile 'com.facebook.react:react-native:[0.55.4,)'
     compile "com.google.zxing:core:3.2.1"
 }
