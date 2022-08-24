@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.1'
+        classpath 'com.android.tools.build:gradle:7.2.0'
     }
 }
 
@@ -35,6 +35,6 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:[0.55.4,)'
-    compile "com.google.zxing:core:3.2.1"
+    implementation 'com.facebook.react:react-native:[0.55.4,)'
+    implementation "com.google.zxing:core:3.2.1"
 }

@@ -25,7 +25,7 @@
   "license": "MIT",
   "private": false,
   "peerDependencies": {
-    "react": "^16.4.0",
-    "react-native": "^0.56.0"
+    "react": "^17 || ^18",
+    "react-native": "^0.68.0"
   }
 }
