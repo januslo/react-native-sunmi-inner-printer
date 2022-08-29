@@ -28,6 +28,6 @@
   "private": false,
   "peerDependencies": {
     "react": "^17 || ^18",
-    "react-native": "^0.68 || ^0.69"
+    "react-native": "^0.67 || ^0.68 || ^0.69"
   }
 }
