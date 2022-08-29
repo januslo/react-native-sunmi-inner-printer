@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.sunmi.innerprinter">
   <application>
-  <receiver android:name="com.sunmi.innerprinter.PrinterReceiver" android:enabled="true">
+    <receiver android:name="com.sunmi.innerprinter.PrinterReceiver" android:enabled="true" android:exported="true">
       <intent-filter android:priority="1000">
         <!-- 缺纸异常 -->
-        <action android:name="woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION" />  
+        <action android:name="woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION" />
         <!-- 打印错误 -->
         <action android:name="woyou.aidlservice.jiuv5.ERROR_ACTION" />
         <!-- 可以打印 -->
@@ -20,7 +20,7 @@
         <action android:name="woyou.aidlservice.jiuv5.OVER_HEATING_ACITON" />
         <!-- 打印机固件开始升级 -->
         <action android:name="woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON" />
-      </intent-filter>  
-  </receiver>
+      </intent-filter>
+    </receiver>
   </application>
 </manifest>
